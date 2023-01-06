@@ -29,14 +29,6 @@ static void linked_list_remove_last(Heap_Data* data, Chunk_Header* el) {
   data->last = ptr;
 }
 
-Heap_Data* create_heap(size_t heap_size) {
-  char heap[heap_size];
-  Heap_Data new_heap;
-  new_heap.heap_size = heap_size;
-  new_heap.pbrk = 0;
-  new_heap.heap = heap;
-  return &new_heap;
-}
 
 static Chunk_Header* search_free_block(Heap_Data* heap_data, size_t required_size) {
   if (heap_data->first == NULL) {
