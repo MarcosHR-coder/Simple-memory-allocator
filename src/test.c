@@ -8,27 +8,50 @@ char heap[HEAP_SIZE];
 
 Heap_Data heap_data = {&heap, HEAP_SIZE, 0, NULL, NULL};
 
-/*
-Heap_Data* create_heap(size_t heap_size) {
-  char heap[heap_size];
-  Heap_Data new_heap;
-  new_heap.heap_size = heap_size;
-  new_heap.pbrk = 0;
-  new_heap.heap = heap;
-  new_heap.first = NULL;
-  new_heap.last = NULL;
-  return &new_heap;
+void print_memory_state(Heap_Data* heap_data) {
+  printf("\n\tMemory state:\n");
+  if (heap_data->first == NULL) {
+    printf("| The memory is empty\n");
+    printf("---------------------\n\n");
+    return;
+  }
+  Chunk_Header* ptr = heap_data->first;
+  int counter = 0;
+  while (ptr) {
+    counter++;
+    fflush(stdout);
+    fflush(stdin);
+    printf("| Chunk %i:\n", counter);
+    printf("|----------is_free: %i\n", ptr->is_free);
+    printf("|-------------size: %zu\n\n", ptr->size);
+    ptr = ptr->next;
+  }
+  printf("-------------------\n");
 }
-*/
 
 int main() {
+  print_memory_state(&heap_data);
   void* chunk = alloc(&heap_data, 8);
+
+  print_memory_state(&heap_data);
   int* number = (int*) alloc(&heap_data, sizeof(int));
   *number = 7;
+
+  print_memory_state(&heap_data);
   char* phrase = (char*) alloc(&heap_data, sizeof(char) * 30);
   strncpy(phrase, "Buenos días caballero", 30);
 
-  printf("Number: %i, Phrase: %s ;", *number, phrase);
+  printf("\nNumber: %i, Phrase: %s\n", *number, phrase);
+
+  print_memory_state(&heap_data);
+  dealloc(&heap_data, chunk);
+
+  print_memory_state(&heap_data);
+  dealloc(&heap_data, phrase);
+
+  print_memory_state(&heap_data);
+  dealloc(&heap_data, number);
+  print_memory_state(&heap_data);
 
   return 0;
 }

@@ -66,5 +66,10 @@ void* alloc(Heap_Data* heap_data, size_t size) {
 }
 
 void dealloc(Heap_Data* heap_data, void* adress) {
-
+  Chunk_Header* adress_header = (Chunk_Header*)(adress - sizeof(Chunk_Header));
+  adress_header->is_free = TRUE;
+  if (heap_data->last == adress_header) {
+    heap_data->pbrk -= adress_header->size + sizeof(Chunk_Header);
+    linked_list_remove_last(heap_data, adress_header);
+  }
 }
